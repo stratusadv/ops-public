@@ -1,0 +1,12 @@
+[Unit]
+Description=Set NVIDIA GPU Power Limit
+After=network.target nvidia-persistenced.service
+ConditionPathExists=/usr/bin/nvidia-smi
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-gpu-power-350.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
