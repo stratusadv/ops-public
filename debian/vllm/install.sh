@@ -36,8 +36,8 @@ else
 fi
 
 # Safely add or update UV_TORCH_BACKEND
-sed -i '/^UV_TORCH_BACKEND=/d' "$ENV_FILE"
-echo "UV_TORCH_BACKEND=cu130" >> "$ENV_FILE"
+#sed -i '/^UV_TORCH_BACKEND=/d' "$ENV_FILE"
+#echo "UV_TORCH_BACKEND=cu130" >> "$ENV_FILE"
 
 # Source the file so we can check if HF_TOKEN is actually set
 source "$ENV_FILE"
@@ -52,7 +52,7 @@ fi
 uv venv /root/vllm-venv
 source /root/vllm-venv/bin/activate
 
-uv pip install -U --pre vllm --extra-index-url https://wheels.vllm.ai/nightly
+uv pip install -U vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
 
 deactivate
 
