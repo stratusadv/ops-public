@@ -52,7 +52,7 @@ fi
 uv venv /root/vllm-venv
 source /root/vllm-venv/bin/activate
 
-uv pip install vllm
+uv pip install -U --pre vllm --extra-index-url https://wheels.vllm.ai/nightly
 
 deactivate
 
