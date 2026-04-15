@@ -17,7 +17,7 @@ if [ ! -f "$VLLM_CONFIG_FILE" ]; then
 fi
 
 # Use a dedicated service environment file instead of the global OS file
-ENV_FILE="/etc/vllm.env"
+ENV_FILE="/etc/environment"
 
 # Create the file if it doesn't exist
 touch "$ENV_FILE"
