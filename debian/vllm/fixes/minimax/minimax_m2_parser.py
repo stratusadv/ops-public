@@ -1,6 +1,3 @@
-nano vllm-venv/lib/python3.13/site-packages/vllm/parser/minimax_m2_parser.py
-
-```python
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
 
@@ -62,6 +59,3 @@ class MiniMaxM2Parser(DelegatingParser):
         logger.debug(
             "vLLM Successfully initialized parser %s!", self.__class__.__name__
         )
-
-
-```
