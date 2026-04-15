@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root (use sudo)"
+   exit 1
+fi
+
 echo "Installing Nvidia Power Service ... "
 
 cp set-gpu-power-350.sh /usr/local/bin/set-gpu-power-350.sh

@@ -1,0 +1,13 @@
+[Unit]
+Description=Vllm Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/vllm.sh
+User=root
+Group=root
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=default.target
