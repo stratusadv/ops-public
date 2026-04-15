@@ -68,6 +68,6 @@ cp vllm.service /etc/systemd/system/vllm.service
 
 systemctl daemon-reload
 systemctl enable vllm
-systemctl start vllm
+systemctl restart vllm
 
 echo "✅ Done"
