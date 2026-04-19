@@ -2,7 +2,7 @@ model: cyankiwi/Qwen3.6-35B-A3B-AWQ-4bit
 served-model-name:
   - 'stratus.turbo'
 tensor-parallel-size: 2
-gpu-memory-utilization: 0.95
+gpu-memory-utilization: 0.90
 max-model-len: 262144
 enable-expert-parallel: True
 enable-auto-tool-choice: True
