@@ -10,3 +10,4 @@ enable-prefix-caching: True
 tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
 kv-cache-dtype: 'fp8'
+max-num-batched-tokens: 4096
