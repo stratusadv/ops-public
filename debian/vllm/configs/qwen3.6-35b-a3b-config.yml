@@ -1,4 +1,4 @@
-model: cyankiwi/Qwen3.6-35B-A3B-AWQ-4bit
+model: 'cyankiwi/Qwen3.6-35B-A3B-AWQ-4bit'
 served-model-name:
   - 'stratus.turbo'
 tensor-parallel-size: 2

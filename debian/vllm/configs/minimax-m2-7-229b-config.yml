@@ -1,4 +1,4 @@
-model: cyankiwi/MiniMax-M2.7-AWQ-4bit
+model: 'cyankiwi/MiniMax-M2.7-AWQ-4bit'
 served-model-name:
   - 'stratus.thinking'
 tensor-parallel-size: 2
