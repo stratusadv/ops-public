@@ -6,6 +6,8 @@ ConditionPathExists=/usr/bin/nvidia-smi
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/set-gpu-power-350.sh
+User=root
+Group=root
 RemainAfterExit=yes
 
 [Install]
