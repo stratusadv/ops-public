@@ -9,6 +9,6 @@ enable-expert-parallel: True
 enable-auto-tool-choice: True
 tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
-moe_backend: flash_infer_cutlass
+moe_backend: flashinfer_cutlass
 kv-cache-dtype: 'fp8'
 override-generation-config: {"temperature": 0.6, "presence_penalty": 0.0}
