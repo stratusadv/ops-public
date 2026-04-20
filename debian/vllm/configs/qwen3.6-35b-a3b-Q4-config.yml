@@ -1,7 +1,7 @@
 # Blackwell High VRAM
 model: 'RedHatAI/Qwen3.6-35B-A3B-NVFP4'
 served-model-name:
-  - 'stratus.turbo'
+  - 'stratus.coder'
 tensor-parallel-size: 2
 gpu-memory-utilization: 0.95
 max-model-len: 262144
