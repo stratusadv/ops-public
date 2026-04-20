@@ -5,7 +5,7 @@ ConditionPathExists=/usr/bin/nvidia-smi
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/set-gpu-power-350.sh
+ExecStart=/usr/local/bin/set-nvidia-gpu-power-limit.sh
 User=root
 Group=root
 RemainAfterExit=yes

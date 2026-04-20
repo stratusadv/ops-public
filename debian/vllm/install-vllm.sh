@@ -67,6 +67,8 @@ cp vllm.sh /usr/local/bin/vllm.sh
 chmod +x /usr/local/bin/vllm.sh
 cp vllm.service /etc/systemd/system/vllm.service
 
+echo "Starting VLLM Service"
+
 systemctl daemon-reload
 systemctl enable vllm
 systemctl restart vllm

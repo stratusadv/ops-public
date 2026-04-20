@@ -7,9 +7,9 @@ fi
 
 echo "Installing Nvidia Power Service ... "
 
-cp set-gpu-power-350.sh /usr/local/bin/set-gpu-power-350.sh
+cp set-nvidia-gpu-power-limit.sh /usr/local/bin/set-nvidia-gpu-power-limit.sh
 
-chmod +x /usr/local/bin/set-gpu-power-350.sh
+chmod +x /usr/local/bin/set-nvidia-gpu-power-limit.sh
 
 cp nvidia-power.service /etc/systemd/system/nvidia-power.service
 
@@ -21,4 +21,4 @@ systemctl start nvidia-power
 
 nvidia-smi -q -d POWER
 
-echo "Done"
+echo "✅ Done"
