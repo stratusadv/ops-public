@@ -1,0 +1,5 @@
+model: Qwen/Qwen3-ASR-1.7B
+served-model-name:
+  - "stratus.listen"
+gpu-memory-utilization: 0.85
+max-num-seqs: 32
