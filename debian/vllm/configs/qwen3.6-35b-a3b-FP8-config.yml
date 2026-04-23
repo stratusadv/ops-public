@@ -1,0 +1,13 @@
+# Blackwell High VRAM
+model: 'Qwen/Qwen3.6-27B-FP8'
+served-model-name:
+  - 'stratus.coder'
+tensor-parallel-size: 2
+gpu-memory-utilization: 0.95
+max-model-len: 262144
+enable-expert-parallel: True
+enable-auto-tool-choice: True
+tool-call-parser: 'qwen3_coder'
+reasoning-parser: 'qwen3'
+kv-cache-dtype: 'fp8'
+override-generation-config: {"temperature": 0.6}
