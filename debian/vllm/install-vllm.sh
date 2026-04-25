@@ -56,6 +56,7 @@ uv pip install qwen-asr[vllm]
 uv pip install vllm[audio]
 uv pip install -U vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
 uv pip install nvidia-cuda-runtime-cu12
+uv pip install flashinfer-python --torch-backend=cu130
 
 deactivate
 
