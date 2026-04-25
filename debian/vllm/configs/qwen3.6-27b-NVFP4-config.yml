@@ -1,10 +1,11 @@
 # Blackwell High VRAM
-model: 'Qwen/Qwen3.6-27B-FP8'
+model: 'sakamakismile/Qwen3.6-27B-NVFP4'
 served-model-name:
   - 'stratus.coder'
-data-parallel-size: 2
+tensor-parallel-size: 2
 gpu-memory-utilization: 0.90
 max-model-len: 262144
+enable-prefix-caching: True
 enable-auto-tool-choice: True
 tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
