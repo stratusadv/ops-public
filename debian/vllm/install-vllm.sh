@@ -54,7 +54,7 @@ source /root/vllm-venv/bin/activate
 
 uv pip install qwen-asr[vllm]
 uv pip install vllm[audio]
-uv pip install -U vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
+uv pip install -U vllm --torch-backend=cu130 --extra-index-url https://wheels.vllm.ai/nightly
 uv pip install nvidia-cuda-runtime-cu12
 uv pip install flashinfer-python --torch-backend=cu130
 
@@ -69,11 +69,13 @@ fi
 cp vllm.sh /usr/local/bin/vllm.sh
 chmod +x /usr/local/bin/vllm.sh
 cp vllm.service /etc/systemd/system/vllm.service
+cp vllm-restart.service /etc/systemd/system/vllm-restart.service
+cp vllm-restart.timer /etc/systemd/system/vllm-restart.timer
 
 echo "Starting VLLM Service"
 
 systemctl daemon-reload
-systemctl enable vllm
-systemctl restart vllm
+systemctl enable --now vllm
+systemctl enable --now vllm-restart.timer
 
 echo "✅ Done"
