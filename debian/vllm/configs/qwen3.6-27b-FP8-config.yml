@@ -10,6 +10,5 @@ max-num-seqs: 512
 tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
 kv-cache-dtype: 'fp8'
-dtype: 'fp8'
 calculate-kv-scales: True
 override-generation-config: {"temperature": 0.6}
