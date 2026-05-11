@@ -76,6 +76,7 @@ echo "Starting VLLM Service"
 
 systemctl daemon-reload
 systemctl enable --now vllm
+systemctl restart vllm
 systemctl enable --now vllm-restart.timer
 
 echo "✅ Done"
