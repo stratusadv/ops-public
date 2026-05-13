@@ -2,15 +2,15 @@
 model: 'Lorbus/Qwen3.6-27B-int4-AutoRound'
 served-model-name:
   - 'stratus.coder'
-compilation-config.cudagraph_mode: 'none'
+#compilation-config.cudagraph_mode: 'none'
 data-parallel-size: 2
-gpu-memory-utilization: 0.90
+gpu-memory-utilization: 0.93
 max-model-len: 262144
 enable-prefix-caching: True
 enable-auto-tool-choice: True
 tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
-kv-cache-dtype: 'turboquant_4bit_nc'
+#kv-cache-dtype: 'turboquant_4bit_nc'
 dtype: 'half'
-speculative-config: {"method": "mtp", "num_speculative_tokens": 3}
+#speculative-config: {"method": "mtp", "num_speculative_tokens": 3}
 override-generation-config: {"temperature": 0.6}
