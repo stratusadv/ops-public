@@ -10,7 +10,7 @@ enable-prefix-caching: True
 enable-auto-tool-choice: True
 tool-call-parser: 'qwen3_xml'
 reasoning-parser: 'qwen3'
-kv-cache-dtype: 'tq-t4nc'
+kv-cache-dtype: 'turboquant_4bit_nc'
 dtype: 'half'
 speculative-config: {"method": "mtp", "num_speculative_tokens": 3}
 override-generation-config: {"temperature": 0.6}
