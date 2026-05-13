@@ -8,7 +8,7 @@ gpu-memory-utilization: 0.90
 max-model-len: 262144
 enable-prefix-caching: True
 enable-auto-tool-choice: True
-tool-call-parser: 'qwen3_xml'
+tool-call-parser: 'qwen3_coder'
 reasoning-parser: 'qwen3'
 kv-cache-dtype: 'turboquant_4bit_nc'
 dtype: 'half'
