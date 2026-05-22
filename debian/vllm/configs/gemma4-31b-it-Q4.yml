@@ -1,5 +1,4 @@
 # Need to download Gemma 4 Template
-# https://github.com/vllm-project/vllm/blob/e203006a8b05b6380f7deb261c28f384711674c1/examples/tool_chat_template_gemma4.jinja
 
 model: 'cyankiwi/gemma-4-31B-it-AWQ-4bit'
 served-model-name:
