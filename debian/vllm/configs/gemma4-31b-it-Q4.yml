@@ -9,7 +9,6 @@ gpu-memory-utilization: 0.90
 max-model-len: 131072
 enable-prefix-caching: True
 enable-auto-tool-choice: True
-quantization: 'awq'
 tool-call-parser: 'gemma4'
 reasoning-parser: 'gemma4'
 async-scheduling: True
