@@ -2,7 +2,7 @@
 Description=Daily randomized restart for Vllm
 
 [Timer]
-OnCalendar=*-*-* 02:00:00
+OnCalendar=*-*-* 10:00:00
 RandomizedDelaySec=7200
 Persistent=true
 Unit=vllm-restart.service
