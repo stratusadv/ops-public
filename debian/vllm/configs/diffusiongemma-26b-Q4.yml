@@ -1,0 +1,12 @@
+model: 'RedHatAI/diffusiongemma-26B-A4B-it-NVFP4'
+served-model-name:
+  - 'stratus.instant'
+tensor-parallel-size: 1
+gpu-memory-utilization: 0.90
+max-num-seqs: 4
+max-model-len: 262144
+enable-prefix-caching: True
+enable-auto-tool-choice: True
+tool-call-parser: 'gemma4'
+reasoning-parser: 'gemma4'
+chat-template: 'examples/tool_chat_template_gemma4.jinja'
