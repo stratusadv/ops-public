@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "Are you sure you want to resize pve-root (make sure there is no containers or vms)? (y/n): " -n 1 reply
+read -p "Are you sure you want to resize pve-root to 500gb (node must have no containers or vms)? (y/n): " -n 1 reply
 
 case $reply in
     [Yy]* )
@@ -13,6 +13,8 @@ case $reply in
         resize2fs /dev/pve/root
 
         lvcreate -l 100%FREE --thinpool data pve
+
+        lsblk
 
         ;;
     * )
