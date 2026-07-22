@@ -1,6 +1,6 @@
 # This Requires 2 x NVIDIA RTX 6000 Pro Blackwell
 
-model: 'cyankiwi/MiniMax-M2.7-AWQ-4bit'
+model: 'nvidia/MiniMax-M2.7-NVFP4'
 served-model-name:
   - 'stratus.thinking'
 tensor-parallel-size: 2
@@ -9,5 +9,4 @@ max-model-len: 262144
 enable-expert-parallel: True
 enable-auto-tool-choice: True
 tool-call-parser: 'minimax_m2'
-reasoning-parser: 'minimax_m2'
-kv-cache-dtype: 'fp8'
+reasoning-parser: 'minimax_m2_append_think'
