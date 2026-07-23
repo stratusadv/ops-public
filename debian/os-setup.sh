@@ -48,5 +48,5 @@ else
     bash "$INSTALLER" --silent
 fi
 
-echo "We recommend rebooting after this process is complete"
+echo "Done ... We recommend rebooting after this process or if the CUDA installer fails!"
 
