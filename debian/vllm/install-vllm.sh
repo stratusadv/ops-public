@@ -77,10 +77,11 @@ cp vllm-restart.timer /etc/systemd/system/vllm-restart.timer
 
 echo "Starting VLLM Service"
 
-rm -rf /dev/shm/*
 
 systemctl daemon-reload
 systemctl enable --now vllm
+systemctl stop vllm
+rm -rf /dev/shm/*
 systemctl restart vllm
 systemctl enable --now vllm-restart.timer
 
