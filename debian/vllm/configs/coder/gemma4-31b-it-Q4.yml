@@ -2,7 +2,7 @@
 
 model: 'cyankiwi/gemma-4-31B-it-AWQ-4bit'
 served-model-name:
-  - 'stratus.gemma'
+  - 'stratus.coder'
 tensor-parallel-size: 2
 gpu-memory-utilization: 0.90
 max-model-len: 131072

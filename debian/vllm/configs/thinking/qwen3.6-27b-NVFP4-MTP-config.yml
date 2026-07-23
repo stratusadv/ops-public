@@ -1,0 +1,12 @@
+# Blackwell High VRAM
+model: 'unsloth/Qwen3.6-27B-NVFP4'
+served-model-name:
+  - 'stratus.coder'
+data-parallel-size: 2
+gpu-memory-utilization: 0.92
+max-model-len: 262144
+enable-auto-tool-choice: True
+tool-call-parser: 'qwen3_coder'
+reasoning-parser: 'qwen3'
+override-generation-config: {"temperature": 0.6}
+speculative-config {"method": "mtp", "num_speculative_tokens": 2}
