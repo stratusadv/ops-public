@@ -48,3 +48,5 @@ else
     bash "$INSTALLER" --silent
 fi
 
+echo "We recommend rebooting after this process is complete"
+
