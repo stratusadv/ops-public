@@ -3,7 +3,7 @@
 echo "Setting Up Operating System ..."
 
 SWAP_FILE="/swapfile"
-SWAP_SIZE_GB=32
+SWAP_SIZE_GB=64
 
 if [ "$EUID" -ne 0 ]; then
   echo "Please run this script as root (e.g., sudo ./setup_swap.sh)"
