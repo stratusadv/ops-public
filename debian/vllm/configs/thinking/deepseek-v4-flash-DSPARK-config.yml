@@ -7,7 +7,7 @@ max-model-len: 262144
 enable-expert-parallel: True
 trust-remote-code: True
 moe-backend: 'flashinfer_b12x'
-kv-cache-dtype: 'nvfp4_ds_mla'
+kv-cache-dtype: 'nvfp4'
 chat-template-kwargs: { "enable_thinking": true, "reasoning_effort": "max" }
 speculative-config: { "method": "dspark","num_speculative_tokens": 7,"draft_sample_method": "greedy" }
 tokenizer-mode: 'deepseek_v4'
