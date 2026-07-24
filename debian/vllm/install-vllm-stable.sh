@@ -1,7 +1,7 @@
 #!/bin/bash
 
-./sh/environment-setup.sh &&
-./sh/vllm-stable-install.sh &&
-./sh/vllm-service-install.sh
+source ./sh/environment-setup.sh &&
+source ./sh/vllm-stable-install.sh &&
+source ./sh/vllm-service-install.sh
 
 echo "Stable Vllm Install ✅ Done"
