@@ -7,6 +7,7 @@ max-model-len: 262144
 enable-expert-parallel: True
 moe-backend: 'deep_gemm'
 kv-cache-dtype: 'fp8'
+attention-config: { "use_fp4_indexer_cache": true }
 default-chat-template-kwargs: { "enable_thinking": true, "reasoning_effort": "max" }
 speculative-config: { "method": "dspark","num_speculative_tokens": 7,"draft_sample_method": "greedy" }
 tokenizer-mode: 'deepseek_v4'
