@@ -50,7 +50,6 @@ apt upgrade -y
 echo "Installing required Applications ..."
 
 apt install -y \
-    btop \
     build-essential \
     cmake \
     curl \
