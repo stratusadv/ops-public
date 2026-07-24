@@ -49,7 +49,7 @@ if [ -z "$HF_TOKEN" ]; then
 fi
 
 # Explicitly use the absolute path for the virtual environment
-uv venv /root/vllm-venv
+uv venv /root/vllm-venv --python 3.12
 source /root/vllm-venv/bin/activate
 
 uv pip install qwen-asr[vllm]
