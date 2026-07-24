@@ -14,5 +14,5 @@ max-num-batched-tokens: 8192
 max-num-seqs: 8
 override-generation-config: { "temperature": 0.55 }
 reasoning-parser: 'qwen3'
-speculative-config: { "method": "mtp", "num_speculative_tokens": 2 }
+speculative-config: { "method": "mtp", "num_speculative_tokens": 3 }
 tool-call-parser: 'qwen3_xml'
