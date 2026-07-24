@@ -1,4 +1,5 @@
 # Blackwell High VRAM
+
 model: 'unsloth/Qwen3.6-27B-NVFP4'
 served-model-name:
   - 'stratus.thinking'
@@ -12,7 +13,7 @@ load-format: 'fastsafetensors'
 max-model-len: 262144
 max-num-batched-tokens: 8192
 max-num-seqs: 8
-override-generation-config: {"temperature": 0.55}
+override-generation-config: { "temperature": 0.55 }
 reasoning-parser: 'qwen3'
-speculative-config {"method": "mtp", "num_speculative_tokens": 3}
+speculative-config: { "method": "mtp", "num_speculative_tokens": 3 }
 tool-call-parser: 'qwen3_xml'
