@@ -9,7 +9,6 @@ enable-auto-tool-choice: True
 enable-chunked-prefill: True
 gpu-memory-utilization: 0.9
 kv-cache-dtype: 'fp8'
-load-format: 'fastsafetensors'
 max-model-len: 262144
 max-num-batched-tokens: 8192
 max-num-seqs: 8
