@@ -5,8 +5,7 @@ tensor-parallel-size: 2
 gpu-memory-utilization: 0.96
 max-model-len: 262144
 enable-expert-parallel: True
-trust-remote-code: True
-moe-backend: 'flashinfer_b12x'
+moe-backend: 'deep_gemm'
 kv-cache-dtype: 'fp8'
 #chat-template-kwargs: { "enable_thinking": true, "reasoning_effort": "max" }
 speculative-config: { "method": "dspark","num_speculative_tokens": 7,"draft_sample_method": "greedy" }
