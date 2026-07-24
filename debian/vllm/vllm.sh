@@ -3,6 +3,7 @@
 # Main Configuration
 
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
+export VLLM_USE_FLASHINFER_SAMPLER=0
 
 # Hardware Configuration
 
