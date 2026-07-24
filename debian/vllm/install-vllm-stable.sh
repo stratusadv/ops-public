@@ -56,7 +56,7 @@ uv pip install qwen-asr[vllm]
 uv pip install vllm[audio]
 #uv pip install nvidia-cuda-runtime-cu12
 #uv pip install flashinfer-python --torch-backend=cu130
-uv pip install vllm
+uv pip install -U vllm
 
 deactivate
 
