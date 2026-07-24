@@ -6,7 +6,6 @@ served-model-name:
 async-scheduling: True
 data-parallel-size: 2
 enable-auto-tool-choice: True
-enable-chunked-prefill: True
 gpu-memory-utilization: 0.9
 kv-cache-dtype: 'fp8'
 max-model-len: 262144
