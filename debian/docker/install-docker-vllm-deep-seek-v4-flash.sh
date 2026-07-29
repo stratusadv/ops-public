@@ -12,7 +12,7 @@ docker run --gpus all \
   --enable-expert-parallel \
   --tensor-parallel-size 2 \
   --attention_config.use_fp4_indexer_cache=True \
-  --max-model-len 262,144 \
+  --max-model-len 262144 \
   --tokenizer-mode deepseek_v4 \
   --tool-call-parser deepseek_v4 \
   --enable-auto-tool-choice \
