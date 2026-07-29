@@ -8,6 +8,7 @@ docker run --gpus all \
   vllm/vllm-openai:latest nvidia/DeepSeek-V4-Flash-NVFP4 \
   --trust-remote-code \
   --kv-cache-dtype fp8 \
+  --gpu-memory-utilization 0.96 \
   --block-size 256 \
   --enable-expert-parallel \
   --tensor-parallel-size 2 \
