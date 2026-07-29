@@ -18,9 +18,9 @@ apt install -y \
 
 echo "Updating Repositories"
 
-sudo add-apt-repository ppa:maveonair/helix-editor
-sudo apt update
-sudo apt install helix
+add-apt-repository ppa:maveonair/helix-editor
+apt update
+apt install helix
 
 echo "Installing UV"
 
