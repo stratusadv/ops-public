@@ -2,8 +2,6 @@
 
 echo "Installing Packages"
 
-add-apt-repository ppa:maveonair/helix-editor
-
 apt update
 apt upgrade -y
 
@@ -11,7 +9,7 @@ apt install -y \
     curl \
     git \
     gh \
-    helix \
+    hx \
     lazygit \
     python3 \
     python3-dev \
