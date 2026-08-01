@@ -2,7 +2,7 @@
 
 docker pull vllm/vllm-openai:latest
 
-docker run --gpus all \
+docker run --restart unless-stopped --gpus all \
   --privileged --ipc=host -p 8000:8000 \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai:latest auroter/DeepSeek-V4-Flash-0731-NVFP4 \
