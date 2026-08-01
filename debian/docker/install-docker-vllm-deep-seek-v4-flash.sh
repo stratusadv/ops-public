@@ -3,6 +3,7 @@
 docker pull vllm/vllm-openai:latest
 
 docker run -d --restart unless-stopped --gpus all \
+  --name deepseek_v4 \
   --privileged --ipc=host -p 8000:8000 \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai:latest nvidia/DeepSeek-V4-Flash-NVFP4 \
