@@ -7,6 +7,7 @@ docker run -d --restart unless-stopped --gpus all \
   --privileged --ipc=host -p 8000:8000 \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai:latest auroter/DeepSeek-V4-Flash-0731-NVFP4 \
+  --served-model-name 'stratus.thinking-max' \
   --trust-remote-code \
   --kv-cache-dtype fp8 \
   --gpu-memory-utilization 0.97 \
