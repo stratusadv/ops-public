@@ -10,7 +10,7 @@ docker run -d --restart unless-stopped --gpus all \
   --health-interval=10s \
   --health-timeout=5s \
   --health-retries=5 \
-  --health-start-period=300s \
+  --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai:latest auroter/DeepSeek-V4-Flash-0731-NVFP4 \
   --served-model-name 'stratus.thinking-max' \
