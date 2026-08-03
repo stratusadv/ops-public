@@ -10,7 +10,7 @@ docker run -d --restart unless-stopped --gpus all \
   --served-model-name 'stratus.thinking-max' \
   --trust-remote-code \
   --kv-cache-dtype fp8 \
-  --gpu-memory-utilization 0.97 \
+  --gpu-memory-utilization 0.96 \
   --block-size 256 \
   --tensor-parallel-size 2 \
   --max-model-len 262144 \
