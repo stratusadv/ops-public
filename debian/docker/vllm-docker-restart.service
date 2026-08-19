@@ -1,0 +1,6 @@
+[Unit]
+Description=Restarter for Vllm Docker Container
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker restart vllm
