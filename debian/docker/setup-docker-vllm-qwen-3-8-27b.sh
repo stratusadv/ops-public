@@ -23,8 +23,6 @@ docker run -d --restart unless-stopped --gpus all \
   --max-model-len 262144 \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
-  --reasoning-parser qwen3 \
-  --enable-chunked-prefill \
-  --max-num-batched-tokens 8192
+  --reasoning-parser qwen3
 
 source ./sh/vllm-docker-restart-service-install.sh
