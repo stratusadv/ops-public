@@ -23,6 +23,7 @@ docker run -d --restart unless-stopped --gpus all \
   --max-model-len 262144 \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
-  --reasoning-parser qwen3
+  --reasoning-parser qwen3 \
+  --enable-prefix-caching
 
 source ./sh/vllm-docker-restart-service-install.sh
