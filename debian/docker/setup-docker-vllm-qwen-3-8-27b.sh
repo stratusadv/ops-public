@@ -24,6 +24,7 @@ docker run -d --restart unless-stopped --gpus all \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
   --reasoning-parser qwen3 \
-  --enable-prefix-caching
+  --enable-prefix-caching \
+  --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}'
 
 source ./sh/vllm-docker-restart-service-install.sh
