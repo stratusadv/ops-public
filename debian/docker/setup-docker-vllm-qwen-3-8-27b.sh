@@ -19,7 +19,7 @@ docker run -d --restart unless-stopped --gpus all \
   --trust-remote-code \
   --kv-cache-dtype fp8 \
   --gpu-memory-utilization 0.95 \
-  --tensor-parallel-size 2 \
+  --data-parallel-size 2 \
   --max-model-len 262144 \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
