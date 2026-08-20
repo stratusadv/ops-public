@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./sh/vllm-docker-stop-and-remove.sh
+
 docker pull vllm/vllm-openai:latest
 
 docker run -d --restart unless-stopped --gpus all \

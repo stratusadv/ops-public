@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./sh/vllm-docker-stop-and-remove.sh
+
 docker pull vllm/vllm-openai:latest
 
 docker run -d --restart unless-stopped --gpus all \
@@ -22,6 +24,7 @@ docker run -d --restart unless-stopped --gpus all \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
   --reasoning-parser qwen3 \
-  --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}'
+  --enable-chunked-prefill \
+  --max-num-batched-tokens 8192
 
 source ./sh/vllm-docker-restart-service-install.sh
