@@ -19,7 +19,6 @@ docker run -d --restart unless-stopped --gpus all \
   --enable-auto-tool-choice \
   --no-enable-flashinfer-autotune \
   --enable-prefix-caching \
-  --kv-cache-dtype fp8 \
   --gpu-memory-utilization 0.95 \
   --tensor-parallel-size 2 \
   --max-model-len 262144 \
