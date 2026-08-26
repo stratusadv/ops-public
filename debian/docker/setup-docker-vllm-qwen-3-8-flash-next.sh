@@ -20,11 +20,11 @@ docker run -d --restart unless-stopped --gpus all \
   --no-enable-flashinfer-autotune \
   --enable-prefix-caching \
   --gpu-memory-utilization 0.95 \
-  --tensor-parallel-size 2 \
   --max-model-len 262144 \
   --max-num-seqs 256 \
   --reasoning-parser qwen3 \
   --speculative-config '{"method": "mtp", "num_speculative_tokens": 3}' \
+  --tensor-parallel-size 2 \
   --tool-call-parser qwen3_coder \
   --trust-remote-code
 
