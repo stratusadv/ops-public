@@ -78,9 +78,6 @@ echo "Installing UV"
 
 wget -qO- https://astral.sh/uv/install.sh | sh
 
-echo "Adding current user to the render and video groups for GPU access..."
-usermod -a -G render,video "$USER"
-
 echo "Installing AMDGPU Driver and ROCm ..."
 
 AMDGPU_INSTALLER="amdgpu-install_7.2.4.70204-1_all.deb"
