@@ -18,7 +18,7 @@ docker run -d --restart unless-stopped --gpus all \
   --served-model-name 'stratus.thinking' \
   --block-size 256 \
   --compilation-config '{"cudagraph_mode":"FULL_DECODE_ONLY"}' \
-  --cpu-offload-gb 32 \
+  --cpu-offload-gb 16 \
   --enable-auto-tool-choice \
   --enable-expert-parallel \
   --enable-prefix-caching \
@@ -27,7 +27,7 @@ docker run -d --restart unless-stopped --gpus all \
   --max-model-len 262144 \
   --max-num-seqs 2 \
   --moe-backend auto \
-  --reasoning-config '{"reasoning_parser":"deepseek_v4","reasoning_start_str":"","reasoning_end_str":""}' \
+  --reasoning-config '{"reasoning_parser":"deepseek_v4","reasoning_start_str":","reasoning_end_str":"}' \
   --reasoning-parser deepseek_v4 \
   --speculative-config '{"method":"dspark","num_speculative_tokens":5}' \
   --tensor-parallel-size 2 \
