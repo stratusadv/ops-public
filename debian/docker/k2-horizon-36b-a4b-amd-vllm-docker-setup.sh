@@ -4,7 +4,7 @@ source ./sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai-rocm:nightly
 
-docker run -d
+docker run -d \
   --restart unless-stopped \
   --device=/dev/kfd \
   --device=/dev/dri \
