@@ -4,10 +4,16 @@ source ./sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai-rocm:nightly
 
-docker run -d --restart unless-stopped --gpus all \
+docker run -d
+  --restart unless-stopped \
+  --device=/dev/kfd \
+  --device=/dev/dri \
+  --group-add render \
+  --group-add video \
   --name vllm \
   --label autoheal=true \
-  --privileged --ipc=host -p 8000:8000 \
+  --privileged \
+  --ipc=host -p 8000:8000 \
   --health-cmd='curl -f http://localhost:8000/health || exit 1' \
   --health-interval=15s \
   --health-timeout=5s \
