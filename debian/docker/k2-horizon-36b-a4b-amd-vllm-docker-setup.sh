@@ -25,7 +25,8 @@ docker run -d \
   vllm/vllm-openai-rocm:nightly cyankiwi/K2-Horizon-MoVA-36B-A4B-AWQ-INT4 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
-  --enable-expert-parallel \
+  --disable-custom-all-reduce \
+#  --enable-expert-parallel \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
@@ -34,5 +35,6 @@ docker run -d \
   --tool-call-parser k2_horizon \
   --enable-prefix-caching \
   --default-chat-template-kwargs '{"reasoning_effort": "low"}'
+
 
 source ./sh/vllm-docker-restart-service-install.sh
