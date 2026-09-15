@@ -26,7 +26,7 @@ docker run -d \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
   --disable-custom-all-reduce \
-#  --enable-expert-parallel \
+  --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
