@@ -8,8 +8,8 @@ docker run -d \
   --restart unless-stopped \
   --device=/dev/kfd \
   --device=/dev/dri \
-  -e VLLM_ROCM_USE_AITER=1 \
-  -e VLLM_USE_RUST_FRONTEND=1 \
+  --group-add=video \
+  -e NCCL_PROTO=Simple \
   --name vllm \
   --label autoheal=true \
   --privileged \
@@ -23,6 +23,7 @@ docker run -d \
   vllm/vllm-openai-rocm:latest Qwen/Qwen3.8-27B-FP8 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
+  --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
