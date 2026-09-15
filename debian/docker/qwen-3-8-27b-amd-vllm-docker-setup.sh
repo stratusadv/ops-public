@@ -2,16 +2,14 @@
 
 source ./sh/vllm-docker-stop-and-remove.sh
 
-docker pull vllm/vllm-openai-rocm:nightly
+docker pull vllm/vllm-openai-rocm:latest
 
 docker run -d \
   --restart unless-stopped \
   --device=/dev/kfd \
   --device=/dev/dri \
-  --group-add render \
-  --group-add video \
-  -e VLLM_USE_V1=0 \
-  -e NCCL_DEBUG=INFO \
+  -e VLLM_ROCM_USE_AITER=1 \
+  -e VLLM_USE_RUST_FRONTEND=1 \
   --name vllm \
   --label autoheal=true \
   --privileged \
@@ -22,18 +20,17 @@ docker run -d \
   --health-retries=3 \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  vllm/vllm-openai-rocm:nightly cyankiwi/K2-Horizon-MoVA-36B-A4B-AWQ-INT4 \
+  vllm/vllm-openai-rocm:latest Qwen/Qwen3.8-27B-FP8 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
-  --disable-custom-all-reduce \
-  --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
-  --reasoning-parser k2_horizon \
+  --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
-  --tool-call-parser k2_horizon \
+  --reasoning-parser qwen3 \
   --enable-prefix-caching \
+  --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}' \
   --default-chat-template-kwargs '{"reasoning_effort": "low"}'
 
 
