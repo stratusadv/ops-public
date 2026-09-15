@@ -15,7 +15,6 @@ docker run -d \
   --device=/dev/dri \
   --group-add=video \
   --group-add=render \
-  -e VLLM_USE_V1_ENGINE=0 \
   -e NCCL_P2P_DISABLE=1 \
   -e RCCL_P2P_DISABLE=1 \
   -e NCCL_PROTO=Simple \
@@ -30,7 +29,6 @@ docker run -d \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
   --enforce-eager \
-  --use-v1=0 \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
@@ -39,7 +37,6 @@ docker run -d \
   --enable-auto-tool-choice \
   --reasoning-parser qwen3 \
   --enable-prefix-caching \
-  --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}' \
   --default-chat-template-kwargs '{"reasoning_effort": "low"}'
 
 source ./sh/vllm-docker-restart-service-install.sh
