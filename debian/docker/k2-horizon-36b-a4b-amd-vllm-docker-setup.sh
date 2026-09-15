@@ -10,6 +10,8 @@ docker run -d \
   --device=/dev/dri \
   --group-add render \
   --group-add video \
+  -e VLLM_USE_V1=0 \
+  -e NCCL_DEBUG=INFO \
   --name vllm \
   --label autoheal=true \
   --privileged \
