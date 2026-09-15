@@ -2,7 +2,7 @@
 
 source ./sh/vllm-docker-stop-and-remove.sh
 
-docker pull vllm/vllm-openai:latest
+docker pull vllm/vllm-openai-rocm:nightly
 
 docker run -d --restart unless-stopped --gpus all \
   --name vllm \
@@ -14,7 +14,7 @@ docker run -d --restart unless-stopped --gpus all \
   --health-retries=3 \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  vllm/vllm-openai-rocm:latest cyankiwi/K2-Horizon-MoVA-36B-A4B-AWQ-INT4 \
+  vllm/vllm-openai-rocm:nightly cyankiwi/K2-Horizon-MoVA-36B-A4B-AWQ-INT4 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
   --enable-expert-parallel \
