@@ -31,7 +31,7 @@ docker run -d \
   --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
-  --tensor-parallel-size 1 \
+  --tensor-parallel-size 2 \
   --disable-custom-all-reduce \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
