@@ -31,7 +31,7 @@ docker run -d \
   --health-retries=3 \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  vllm/vllm-openai-rocm:latest amd/Qwen3.8-27B-Quark-AWQ-MXFP4 \
+  vllm/vllm-openai-rocm:latest amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
   --enforce-eager \
