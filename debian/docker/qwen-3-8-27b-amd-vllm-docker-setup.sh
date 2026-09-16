@@ -21,6 +21,7 @@ docker run -d \
   -e NCCL_P2P_DISABLE=1 \
   -e RCCL_P2P_DISABLE=1 \
   -e NCCL_SHM_DISABLE=1 \
+  -e NCCL_SOCKET_IFNAME=lo \
   -e NCCL_DEBUG=INFO \
   -e NCCL_PROTO=Simple \
   -p 8000:8000 \
