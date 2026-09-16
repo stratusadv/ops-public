@@ -25,13 +25,13 @@ docker run -d \
   --health-retries=3 \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  vllm/vllm-openai-rocm:latest Qwen/Qwen3.8-27B-FP8 \
+  vllm/vllm-openai-rocm:latest amd/Qwen3.8-27B-Quark-AWQ-MXFP4 \
   --served-model-name 'dandy.dash' \
   --trust-remote-code \
   --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
-  --tensor-parallel-size 2 \
+  --tensor-parallel-size 1 \
   --disable-custom-all-reduce \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
