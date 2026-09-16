@@ -15,12 +15,14 @@ docker run -d \
   --device=/dev/dri \
   --group-add=video \
   --group-add=render \
+  -e HIP_VISIBLE_DEVICES=0,1 \
+  -e ROCR_VISIBLE_DEVICES=0,1 \
+  -e HSA_ENABLE_SDMA=0 \
   -e NCCL_P2P_DISABLE=1 \
   -e RCCL_P2P_DISABLE=1 \
   -e NCCL_SHM_DISABLE=1 \
   -e NCCL_DEBUG=INFO \
-  -e NCCL_PROTO=Simple \
-  -p 8000:8000 \
+  -e NCCL_PROTO=Simple \  -p 8000:8000 \
   --health-cmd='curl -f http://localhost:8000/health || exit 1' \
   --health-interval=15s \
   --health-timeout=5s \
