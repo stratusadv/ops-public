@@ -37,12 +37,13 @@ docker run -d \
   --enforce-eager \
   --gpu-memory-utilization 0.90 \
   --kv-cache-dtype fp8 \
-  --tensor-parallel-size 2 \
+  --tensor-parallel-size 1 \
   --disable-custom-all-reduce \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
   --reasoning-parser qwen3 \
   --enable-prefix-caching \
+  --max-model-len 32768 \
   --default-chat-template-kwargs '{"reasoning_effort": "low"}'
 
 source ./sh/vllm-docker-restart-service-install.sh

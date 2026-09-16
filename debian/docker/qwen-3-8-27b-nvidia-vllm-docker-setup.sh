@@ -14,7 +14,7 @@ docker run -d --restart unless-stopped --gpus all \
   --health-retries=3 \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  vllm/vllm-openai:latest unsloth/Qwen3.8-27B-NVFP4 \
+  vllm/vllm-openai:latest Qwen/Qwen3.8-27B-FP8 \
   --served-model-name 'stratus.thinking' \
   --trust-remote-code \
   --kv-cache-dtype fp8 \
@@ -23,8 +23,11 @@ docker run -d --restart unless-stopped --gpus all \
   --max-model-len 262144 \
   --tool-call-parser qwen3_coder \
   --enable-auto-tool-choice \
+  --enable-chunked-prefill \
   --reasoning-parser qwen3 \
   --enable-prefix-caching \
-  --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}'
+  --limit-mm-per-prompt image=4 \
+  --default-chat-template-kwargs '{"enable_thinking": true, "preserve_thinking": true}' \
+  --speculative-config '{"method": "mtp", "num_speculative_tokens": 3}'
 
 source ./sh/vllm-docker-restart-service-install.sh
