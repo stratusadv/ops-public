@@ -21,13 +21,14 @@ docker run -d --restart unless-stopped --gpus all \
   --gpu-memory-utilization 0.95 \
   --tensor-parallel-size 2 \
   --max-model-len 262144 \
-  --tool-call-parser qwen3_coder \
+  --tool-call-parser qwen3_xml \
   --enable-auto-tool-choice \
   --enable-chunked-prefill \
   --reasoning-parser qwen3 \
   --enable-prefix-caching \
-  --limit-mm-per-prompt image=4 \
+  --limit-mm-per-prompt '{"image":4,"video":1}' \
+  --mm-encoder-tp-mode data \
   --default-chat-template-kwargs '{"enable_thinking": true, "preserve_thinking": true}' \
-  --speculative-config '{"method": "mtp", "num_speculative_tokens": 3}'
+  --speculative-config '{"method":"dflash","model":"incoai/Qwen3.8-27B-DFlash2","num_speculative_tokens":7}'
 
 source ./sh/vllm-docker-restart-service-install.sh
