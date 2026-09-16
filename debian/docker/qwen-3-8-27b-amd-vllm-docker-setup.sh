@@ -22,7 +22,8 @@ docker run -d \
   -e RCCL_P2P_DISABLE=1 \
   -e NCCL_SHM_DISABLE=1 \
   -e NCCL_DEBUG=INFO \
-  -e NCCL_PROTO=Simple \  -p 8000:8000 \
+  -e NCCL_PROTO=Simple \
+  -p 8000:8000 \
   --health-cmd='curl -f http://localhost:8000/health || exit 1' \
   --health-interval=15s \
   --health-timeout=5s \
