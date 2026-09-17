@@ -26,7 +26,6 @@ docker run -d --restart unless-stopped --gpus all \
   --enable-chunked-prefill \
   --reasoning-parser qwen3 \
   --enable-prefix-caching \
-  --limit-mm-per-prompt '{"image":4,"video":1}' \
   --mm-encoder-tp-mode data \
   --default-chat-template-kwargs '{"enable_thinking": true, "preserve_thinking": true}' \
   --speculative-config '{"method":"dflash","model":"incoai/Qwen3.8-27B-DFlash2","num_speculative_tokens":7}'
