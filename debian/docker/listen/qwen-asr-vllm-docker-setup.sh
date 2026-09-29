@@ -2,8 +2,16 @@
 
 set -euo pipefail
 
+if [ -f /etc/environment ]; then
+    set -a
+    source /etc/environment
+    set +a
+fi
+
 VLLM_TAG="${VLLM_TAG:-latest}"
 TENSOR_PARALLEL="${TENSOR_PARALLEL:-1}"
+HF_TOKEN="${HF_TOKEN:-}"
+VLLM_API_KEY="${VLLM_API_KEY:-}"
 
 source ../sh/vllm-docker-stop-and-remove.sh || true
 
@@ -18,6 +26,8 @@ docker run -d --restart unless-stopped --gpus all \
   --health-timeout=5s \
   --health-retries=3 \
   --health-start-period=600s \
+  -e "HF_TOKEN=${HF_TOKEN}" \
+  -e "VLLM_API_KEY=${VLLM_API_KEY}" \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   -v "$(pwd)/config.yml:/config.yml:ro" \
   stratus/listen:"${VLLM_TAG}" \

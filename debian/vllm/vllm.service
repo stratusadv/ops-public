@@ -3,6 +3,7 @@ Description=Vllm Service
 After=network-online.target
 
 [Service]
+EnvironmentFile=-/etc/environment
 ExecStart=/usr/local/bin/vllm.sh
 User=root
 Group=root
