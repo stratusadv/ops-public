@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./sh/vllm-docker-stop-and-remove.sh
+source ../sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai:latest
 
@@ -30,4 +30,4 @@ docker run -d --restart unless-stopped --gpus all \
   --default-chat-template-kwargs '{"enable_thinking": true, "preserve_thinking": true}' \
   --speculative-config '{"method":"dflash","model":"incoai/Qwen3.8-27B-DFlash2","num_speculative_tokens":7}'
 
-source ./sh/vllm-docker-restart-service-install.sh
+source ../sh/vllm-docker-restart-service-install.sh

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./sh/vllm-docker-stop-and-remove.sh
+source ../sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai:latest
 
@@ -16,23 +16,17 @@ docker run -d --restart unless-stopped --gpus all \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai:latest auroter/DeepSeek-V4-Flash-0731-NVFP4 \
   --served-model-name 'stratus.thinking' \
-  --block-size 256 \
-  --compilation-config '{"cudagraph_mode":"FULL_DECODE_ONLY"}' \
-  --cpu-offload-gb 16 \
-  --enable-auto-tool-choice \
-  --enable-expert-parallel \
-  --enable-prefix-caching \
-  --gpu-memory-utilization 0.95 \
+  --trust-remote-code \
   --kv-cache-dtype fp8 \
+  --gpu-memory-utilization 0.95 \
+  --block-size 256 \
+  --tensor-parallel-size 2 \
   --max-model-len 262144 \
   --max-num-seqs 2 \
-  --moe-backend auto \
-  --reasoning-config '{"reasoning_parser":"deepseek_v4","reasoning_start_str":","reasoning_end_str":"}' \
-  --reasoning-parser deepseek_v4 \
-  --speculative-config '{"method":"dspark","num_speculative_tokens":5}' \
-  --tensor-parallel-size 2 \
   --tokenizer-mode deepseek_v4 \
   --tool-call-parser deepseek_v4 \
-  --trust-remote-code
+  --enable-auto-tool-choice \
+  --reasoning-parser deepseek_v4 \
+  --compilation-config '{"cudagraph_mode":"FULL_DECODE_ONLY"}'
 
-source ./sh/vllm-docker-restart-service-install.sh
+source ../sh/vllm-docker-restart-service-install.sh

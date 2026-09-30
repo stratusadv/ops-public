@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./sh/vllm-docker-stop-and-remove.sh
+source ../sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai-rocm:latest
 
@@ -32,7 +32,7 @@ docker run -d \
   --health-start-period=600s \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai-rocm:latest amd/Qwen3.8-27B-Quark-AWQ-INT4-W4A16 \
-  --served-model-name 'dandy.dash' \
+  --served-model-name 'stratus.turbo' \
   --trust-remote-code \
   --enforce-eager \
   --gpu-memory-utilization 0.90 \
@@ -46,4 +46,4 @@ docker run -d \
   --max-model-len 32768 \
   --default-chat-template-kwargs '{"reasoning_effort": "low"}'
 
-source ./sh/vllm-docker-restart-service-install.sh
+source ../sh/vllm-docker-restart-service-install.sh

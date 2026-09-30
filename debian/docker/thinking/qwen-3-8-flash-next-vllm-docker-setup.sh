@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./sh/vllm-docker-stop-and-remove.sh
+source ../sh/vllm-docker-stop-and-remove.sh
 
 docker pull vllm/vllm-openai:latest
 
@@ -28,4 +28,4 @@ docker run -d --restart unless-stopped --gpus all \
   --tool-call-parser qwen3_coder \
   --trust-remote-code
 
-source ./sh/vllm-docker-restart-service-install.sh
+source ../sh/vllm-docker-restart-service-install.sh
