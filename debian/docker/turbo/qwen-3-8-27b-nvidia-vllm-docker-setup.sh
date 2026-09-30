@@ -33,6 +33,7 @@ docker run -d --restart unless-stopped --gpus all \
   --served-model-name 'stratus.turbo' \
   --trust-remote-code \
   --gpu-memory-utilization 0.95 \
+  --kv-cache-dtype fp8 \
   --mamba-ssm-cache-dtype bfloat16 \
   --tensor-parallel-size 2 \
   --max-model-len 65536 \
