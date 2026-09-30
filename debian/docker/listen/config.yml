@@ -1,0 +1,11 @@
+model: Qwen/Qwen3-ASR-1.7B
+served-model-name:
+  - "stratus.listen"
+trust-remote-code: true
+gpu-memory-utilization: 0.85
+tensor-parallel-size: 1
+max-num-seqs: 8
+max-model-len: 8000
+enable-prefix-caching: true
+override-generation-config:
+  repetition_penalty: 1.1
