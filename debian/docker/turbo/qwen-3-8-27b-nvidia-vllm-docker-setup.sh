@@ -3,7 +3,9 @@
 # stratus.turbo on 2 x RTX 3090 (48GB VRAM): Qwen3.8-27B AWQ INT4 (Ampere-safe,
 # no FP8 tensor cores) with the incoai Qwen3.8-27B DFlash2 draft head (7 draft
 # tokens). Instruct mode (no thinking) - enable_thinking off. Context 65536,
-# max-num-batched-tokens 4096. Server-side sampling defaults
+# max-num-batched-tokens 4096. KV cache fp8 (8-bit, ~2x compression; a storage
+# dtype that works on Ampere, keeps 64K sessions cheap so more run
+# concurrently). Server-side sampling defaults
 # (--override-generation-config): temp 0.7, top_p 0.8, top_k 20, min_p 0.0,
 # presence_penalty 1.5, repetition_penalty 1.0.
 
@@ -25,6 +27,7 @@ docker run -d --restart unless-stopped --gpus all \
   --served-model-name 'stratus.turbo' \
   --trust-remote-code \
   --gpu-memory-utilization 0.90 \
+  --kv-cache-dtype fp8 \
   --tensor-parallel-size 2 \
   --max-model-len 65536 \
   --max-num-batched-tokens 4096 \
