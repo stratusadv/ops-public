@@ -19,6 +19,7 @@ docker run -d --restart unless-stopped --gpus all \
   --trust-remote-code \
   --max-num-seqs: 32 \
   --enable-prefix-caching \
+  --tensor-parallel-size 2 \
   --gpu-memory-utilization 0.85
 
 source ./sh/vllm-docker-restart-service-install.sh
