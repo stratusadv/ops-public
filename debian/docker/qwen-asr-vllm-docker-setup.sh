@@ -13,7 +13,7 @@ TENSOR_PARALLEL="${TENSOR_PARALLEL:-1}"
 HF_TOKEN="${HF_TOKEN:-}"
 VLLM_API_KEY="${VLLM_API_KEY:-}"
 
-source ../sh/vllm-docker-stop-and-remove.sh || true
+source ./sh/vllm-docker-stop-and-remove.sh || true
 
 docker build --build-arg "VLLM_TAG=${VLLM_TAG}" -t stratus/listen:"${VLLM_TAG}" .
 
