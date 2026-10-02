@@ -4,9 +4,10 @@ import subprocess
 import tempfile
 import threading
 
-import numpy
+import numpy as np
 import torch
 
+from pathlib import Path
 from typing import BinaryIO
 
 from fastapi import Depends, FastAPI, Header, HTTPException, UploadFile
@@ -47,7 +48,7 @@ def diarization(file: UploadFile) -> dict[str, list[dict[str, float | int]]]:
         diarization_upload_copy(source=file.file, target=upload)
         upload.flush()
 
-        waveform = diarization_waveform_decode(upload.name)
+        waveform = diarization_waveform_decode(Path(upload.name))
 
     with pipeline_lock:
         audio = {'waveform': waveform, 'sample_rate': SAMPLE_RATE_HZ}
@@ -113,8 +114,8 @@ def diarization_upload_copy(*, source: BinaryIO, target: BinaryIO) -> None:
     raise RuntimeError(message)
 
 
-def diarization_waveform_decode(path: str) -> torch.Tensor:
-    if not os.path.isfile(path):
+def diarization_waveform_decode(path: Path) -> torch.Tensor:
+    if not path.is_file():
         message = f'invariant violated: the upload is not a file: {path}'
         raise RuntimeError(message)
 
@@ -142,7 +143,7 @@ def diarization_waveform_decode(path: str) -> torch.Tensor:
         message = 'The upload is not audio that ffmpeg can read.'
         raise HTTPException(status_code=400, detail=message)
 
-    samples = numpy.frombuffer(completed.stdout, dtype=numpy.float32)
+    samples = np.frombuffer(completed.stdout, dtype=np.float32)
 
     if samples.size == 0:
         message = 'The upload holds no audio.'
