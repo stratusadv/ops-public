@@ -19,10 +19,12 @@ Everything lives under `debian/`:
   - `nvidia-container-toolkit-setup.sh` / `amd-container-toolkit-setup.sh` — Docker CE + GPU container toolkit, `nvidia-ctk`/`amd-ctk runtime configure`, restart docker.
   - `autoheal-docker-setup.sh` — runs `willfarrell/autoheal`; it watches and restarts any container labeled `autoheal=true` (all vLLM setup scripts apply that label).
   - `sh/vllm-docker-stop-and-remove.sh` — `docker stop vllm && docker container rm vllm`.
+  - `sh/speakers-docker-stop-and-remove.sh` — the same for the `speakers` container; it never touches `vllm`.
   - `sh/vllm-docker-restart-service-install.sh` — installs the daily restart timer (see below).
   - `vllm-docker-restart.service` / `vllm-docker-restart.timer` — oneshot `docker restart vllm`, daily.
   - `thinking/`, `turbo/`, `listen/` — one `*-vllm-docker-setup.sh` per model deployment.
-  - `listen/Dockerfile` + `config.yml` — the only locally built image (`stratus/listen`): `vllm/vllm-openai` base plus `vllm[audio]` for Qwen3-ASR.
+  - `listen/Dockerfile` + `config.yml` — locally built image (`stratus/listen`): `vllm/vllm-openai` base plus `vllm[audio]` for Qwen3-ASR.
+  - `speakers/` — speaker diarization deployed beside `stratus.listen`; not vLLM. `Dockerfile` (`python:3.12-slim`, ffmpeg, pinned `pyannote.audio`/FastAPI/uvicorn), `app.py` (`GET /health`; `POST /v1/audio/diarization` takes a multipart `file` and returns `{"turns": [{"speaker", "start", "end"}]}` from `pyannote/speaker-diarization-community-1`'s exclusive, non-overlapping output), and `pyannote-speakers-docker-setup.sh`. Container `speakers` on port **8001** with the same autoheal label and `/health` probe as vLLM. It checks `Authorization: Bearer $VLLM_API_KEY` (no key set means no auth, like vLLM), decodes any ffmpeg-readable upload to 16 kHz mono, caps recordings at 6 hours, and runs one request at a time on the GPU.
 - `nvidia/power-service/` — installs `nvidia-power.service` (oneshot, after `nvidia-persistenced`, `RemainAfterExit=yes`) which runs `nvidia-smi -pm 1` and caps power at 350 W (`nvidia-smi -pl 350`).
 - `hugging_face/remove-all-hub-data.sh` — wipes `~/.cache/huggingface/hub`.
 - `pve-root-resize.sh` — **destructive** Proxmox node LVM surgery: removes `/dev/pve/data` LV, resizes root to 500 G, `resize2fs`, recreates `data` thinpool. Requires an empty node (it prompts for confirmation).
@@ -42,6 +44,7 @@ Two parallel paths, both single-instance per host (container and service are alw
 **Docker:**
 1. Run the model-specific `*-vllm-docker-setup.sh`. It sources stop-and-remove, pulls the image (`vllm/vllm-openai:latest` for NVIDIA, `vllm/vllm-openai-rocm:latest` for AMD), then `docker run -d` with model name + flags inline (no compose). The `listen/` script instead builds the local image and passes `HF_TOKEN`/`VLLM_API_KEY` env vars, mounting its `config.yml` read-only.
 2. Ends by sourcing the restart-timer install.
+3. `speakers/pyannote-speakers-docker-setup.sh` runs **in addition to** the listen deployment on the ASR host. The HF account behind `HF_TOKEN` must have accepted the gated `pyannote/speaker-diarization-community-1` terms (auto-approved), and the public reverse proxy (not in this repo) must route `/v1/audio/diarization` to port 8001.
 
 **Recovery/ops model (intentional, don't "fix"):** three redundant restart mechanisms run on purpose to shed memory and recover from hangs — systemd `Restart=always` (15 s), a daily randomized restart timer (native: 10:00 + up to 2 h `RandomizedDelaySec=7200`; docker: `docker restart vllm`), and the autoheal container reacting to the `--health-cmd='curl -f http://localhost:8000/health'` probe (600 s start period).
 
@@ -64,7 +67,8 @@ Two parallel paths, both single-instance per host (container and service are alw
 - `vllm/usage.md` is stale (`install-vllm.sh` does not exist).
 - `vllm/configs/listen/qwen3-asr-2b-config.yml` names a "2b" model but points at `Qwen/Qwen3-ASR-1.7B`; `docker/listen/config.yml` does the same.
 - The HF token is stored in plaintext in `/etc/environment` — treat that file as secret material; never log or echo its contents.
-- The `docker run` containers are all named `vllm`; deploying a second model on the same host requires running the new setup script first (it stops/removes the old container) — they are mutually exclusive by design.
+- The `docker run` containers are all named `vllm`; deploying a second model on the same host requires running the new setup script first (it stops/removes the old container) — they are mutually exclusive by design. The exception is `speakers`, which runs beside `vllm` on the listen host.
+- `speakers` shares the GPU with `stratus.listen`, whose `gpu-memory-utilization: 0.85` leaves ~3.6 GB on a 24 GB card. Measured on an RTX 4090 with both busy: 23.3 GB peak including ~1.2 GB of desktop, so ~2.4 GB spare on a headless host. On a smaller card, lower the share in `listen/config.yml` before deploying `speakers`. The daily restart timer only restarts `vllm`.
 - `environment-setup.sh` is interactive (`read -sp` for the token); it hangs if run non- interactively without a pre-set `HF_TOKEN` in `/etc/environment` (it re-reads the file before exiting).
 - `os-nvidia-setup.sh` downloads a ~large CUDA `.run` into the CWD and reuses it if present; same pattern in the AMD script.
 - The deepseek "optimized" docker setup (`docker/thinking/deep-seek-v4-flash-0731-optimized-vllm-docker-setup.sh`) contains a **malformed** `--reasoning-config` JSON value (unbalanced quotes) — do not copy that line as a template.
