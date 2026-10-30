@@ -6,7 +6,7 @@ Root-run bash scripts that provision and deploy **vLLM** (OpenAI-compatible) LLM
 
 - **`os-nvidia-setup.sh` / `os-amd-setup.sh`** — base host provisioning: 64 GB swap, apt packages, `uv`, then the GPU stack (NVIDIA installs CUDA via a local `.run`, skipped if `nvidia-smi` exists; AMD installs `amdgpu-dkms` + ROCm). Hosts are Proxmox VMs.
 - **`vllm/`** — native (non-Docker) vLLM in a venv: install entry points (`install-vllm-stable.sh` / `...-nightly.sh`), systemd units, per-endpoint `configs/` (`thinking`, `turbo`, `coder`, `instant`, `listen`), and `fixes/`.
-- **`docker/`** — Docker deployment: GPU container-toolkit setup, `autoheal`, `sh/` helpers, restart units, and one `*-vllm-docker-setup.sh` per model under `thinking/`, `turbo/`, and `listen/`.
+- **`docker/`** — Docker deployment: GPU container-toolkit setup, `autoheal`, `sh/` helpers, restart units, one `*-vllm-docker-setup.sh` per model under `thinking/`, `turbo/`, and `listen/`, and `speakers/` (pyannote speaker diarization on port 8001, deployed beside `listen`).
 - **`nvidia/power-service/`** — enables `nvidia-smi -pm 1` and caps power at 350 W.
 - **`development/`**, **`hugging_face/`**, **`pve-root-resize.sh`** — dev tooling, an HF cache wipe, and a destructive Proxmox LVM resize (requires an empty node).
 
@@ -16,6 +16,8 @@ Single instance per host: the container **and** the service are both named `vllm
 
 - **Native (venv)** — copy a config from `vllm/configs/<endpoint>/` to `/root/vllm-config.yml`, then run `vllm/install-vllm-stable.sh` (or `...-nightly.sh`) **from the `vllm/` directory** (the sub-steps use relative paths).
 - **Docker** — from its own directory, run the model's `debian/docker/<endpoint>/<model>-...-vllm-docker-setup.sh`. It stops/removes any existing `vllm` container, pulls the image, and starts the new one.
+
+On the listen host, also run `debian/docker/speakers/pyannote-speakers-docker-setup.sh` from its directory; the public proxy must route `/v1/audio/diarization` to port 8001.
 
 Both end by arming a daily restart timer. Recovery is deliberately triple-redundant: systemd `Restart=always`, a daily randomized restart, and the `autoheal` container reacting to the `/health` probe.
 

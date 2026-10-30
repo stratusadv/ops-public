@@ -19,10 +19,12 @@ Everything lives under `debian/`:
   - `nvidia-container-toolkit-setup.sh` / `amd-container-toolkit-setup.sh` — Docker CE + GPU container toolkit, `nvidia-ctk`/`amd-ctk runtime configure`, restart docker.
   - `autoheal-docker-setup.sh` — runs `willfarrell/autoheal`; it watches and restarts any container labeled `autoheal=true` (all vLLM setup scripts apply that label).
   - `sh/vllm-docker-stop-and-remove.sh` — `docker stop vllm && docker container rm vllm`.
+  - `sh/speakers-docker-stop-and-remove.sh` — the same for the `speakers` container; it never touches `vllm`.
   - `sh/vllm-docker-restart-service-install.sh` — installs the daily restart timer (see below).
   - `vllm-docker-restart.service` / `vllm-docker-restart.timer` — oneshot `docker restart vllm`, daily.
-  - `thinking/`, `turbo/`, `listen/` — one setup script per model deployment: `*-vllm-docker-setup.sh` (vLLM) or `*-sglang-docker-setup.sh` (SGLang, `thinking/`; `stratus.thinking` on 2 x RTX 6000 Pro Blackwell via `lmsysorg/sglang:latest`, Qwen3.8-27B-FP8, `--dp-size 2`, 256K context, thinking on, NEXTN spec from the built-in MTP head, bf16 mamba state, extra_buffer radix cache, 32 GB HiCache host tier).
-  - `listen/Dockerfile` + `config.yml` — the only locally built image (`stratus/listen`): `vllm/vllm-openai` base plus `vllm[audio]` for Qwen3-ASR.
+  - `thinking/`, `turbo/`, `listen/` — one `*-vllm-docker-setup.sh` per model deployment.
+  - `listen/Dockerfile` + `config.yml` — locally built image (`stratus/listen`): `vllm/vllm-openai` base plus `vllm[audio]` for Qwen3-ASR.
+  - `speakers/` — speaker diarization deployed beside `stratus.listen`; not vLLM. `Dockerfile` (`python:3.12-slim`, ffmpeg, pinned `pyannote.audio`/FastAPI/uvicorn), `app.py` (`GET /health`; `POST /v1/audio/diarization` takes a multipart `file` and returns `{"turns": [{"speaker", "start", "end"}]}` from `pyannote/speaker-diarization-community-1`'s exclusive, non-overlapping output), and `pyannote-speakers-docker-setup.sh`. Container `speakers` on port **8001** with the same autoheal label and `/health` probe as vLLM. It checks `Authorization: Bearer $VLLM_API_KEY` (no key set means no auth, like vLLM), decodes any ffmpeg-readable upload to 16 kHz mono, caps recordings at 6 hours, and runs one request at a time on the GPU.
 - `nvidia/power-service/` — installs `nvidia-power.service` (oneshot, after `nvidia-persistenced`, `RemainAfterExit=yes`) which runs `nvidia-smi -pm 1` and caps power at 350 W (`nvidia-smi -pl 350`).
 - `hugging_face/remove-all-hub-data.sh` — wipes `~/.cache/huggingface/hub`.
 - `pve-root-resize.sh` — **destructive** Proxmox node LVM surgery: removes `/dev/pve/data` LV, resizes root to 500 G, `resize2fs`, recreates `data` thinpool. Requires an empty node (it prompts for confirmation).
