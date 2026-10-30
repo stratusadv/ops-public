@@ -131,7 +131,7 @@ docker run -d --restart unless-stopped --gpus all \
   --host 0.0.0.0 \
   --port 8000 \
   --tp-size 2 \
-  --mem-fraction-static 0.93 \
+  --mem-fraction-static 0.95 \
   --attention-backend flashinfer \
   --context-length 262144 \
   --kv-cache-dtype bfloat16 \
@@ -140,7 +140,7 @@ docker run -d --restart unless-stopped --gpus all \
   --max-mamba-cache-size 128 \
   --page-size 64 \
   --enable-hierarchical-cache \
-  --hicache-size 16 \
+  --hicache-size 12 \
   --hicache-write-policy write_through \
   --weight-loader-drop-cache-after-load \
   --enable-cache-report \
