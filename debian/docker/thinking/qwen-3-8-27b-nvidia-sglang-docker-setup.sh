@@ -131,7 +131,7 @@ docker run -d --restart unless-stopped --gpus all \
   --host 0.0.0.0 \
   --port 8000 \
   --tp-size 2 \
-  --mem-fraction-static 0.95 \
+  --mem-fraction-static 0.90 \
   --attention-backend flashinfer \
   --context-length 262144 \
   --kv-cache-dtype bfloat16 \
