@@ -27,23 +27,29 @@
 #
 # 256K context, hybrid GDN memory model (48 linear-attention + 16 full-
 # attention layers):
-# - Every session holds ~150MB of fp32 GDN recurrent state regardless of
-#   context length, so the mamba pool - not the attention KV - is the real
-#   concurrency cap. --mamba-ssm-dtype bfloat16 halves that state (the HF
-#   config pins float32; SGLang honors the override).
+# - Every session holds ~130MB of GDN recurrent state per slot regardless of
+#   context length, so the mamba pool - not the attention KV - caps session
+#   slots. --mamba-ssm-dtype bfloat16 halves that state (the HF config pins
+#   float32; SGLang honors the override). --max-mamba-cache-size 64 caps the
+#   pool at 64 slots (~8.5GB) instead of the ~162 the memory budget
+#   auto-sizes: 64 slots already far exceed what the KV pool can feed, and
+#   the ~13GB the GPU mamba pool frees up becomes KV tokens.
 # - Full-attention KV stays bfloat16 (the production-verified recipe for this
-#   checkpoint keeps it out of fp8 for quality; ~64KiB/token). At 0.85
-#   mem-fraction-static per GPU the KV pool holds ~450K tokens per replica,
-#   i.e. ~1-2 full 256K sessions resident per replica (~3-4 per node); most
-#   agent sessions live far below the window, so real concurrency is higher.
-# - --enable-hierarchical-cache --hicache-size 32: the host-DRAM tier of the
-#   radix cache (SGLang HiCache). When the GPU KV pool evicts conversation
-#   history, the pages migrate to system RAM instead of being dropped, so a
-#   returning agent session reloads its 256K prefix over PCIe (~0.3s for a
-#   full session) instead of re-prefilling it (tens of seconds). 32GB keeps
-#   the agents themselves and the OS fed on the same 64GB host; raise toward
-#   48 if the agents run elsewhere. Only full-attention KV is offloaded; the
-#   GDN state stays on GPU, so concurrency limits are unchanged.
+#   checkpoint keeps it out of fp8 for quality; ~62KiB/token including the
+#   packed MTP layer). At 0.9 mem-fraction-static with the 64-slot mamba cap
+#   the KV pool holds ~690K tokens per replica, i.e. ~2-3 full 256K sessions
+#   resident per replica (~5-6 per node); most agent sessions live far below
+#   the window, so real concurrency is higher.
+# - --enable-hierarchical-cache --hicache-size 16: the host-DRAM tier of the
+#   radix cache (SGLang HiCache). On hybrid GDN models it mirrors BOTH the KV
+#   pages and the GDN state to system RAM: the mamba host pool alone is ~5.5GB
+#   at the 64-slot cap, so total host demand is ~15.5GB. That must fit under
+#   the RAM actually free on a host that also runs the agents and the OS -
+#   the first boot had ~19GB free of the 64GB (the rest: agents plus page
+#   cache from the weight load), and a 32GB budget OOMed the host pool at
+#   init. Evicted sessions reload their 256K prefix over PCIe (~0.3s) instead
+#   of re-prefilling it (tens of seconds). Raise toward 32 if the agents run
+#   elsewhere and more RAM is free.
 #
 # Agent-specific tuning:
 # - --mamba-radix-cache-strategy extra_buffer + --page-size 64: caches GDN
@@ -95,9 +101,10 @@ docker run -d --restart unless-stopped --gpus all \
   --kv-cache-dtype bfloat16 \
   --mamba-ssm-dtype bfloat16 \
   --mamba-radix-cache-strategy extra_buffer \
+  --max-mamba-cache-size 64 \
   --page-size 64 \
   --enable-hierarchical-cache \
-  --hicache-size 32 \
+  --hicache-size 16 \
   --hicache-write-policy write_through \
   --chunked-prefill-size 2048 \
   --max-running-requests 32 \
