@@ -34,37 +34,44 @@
 #
 # 256K context, hybrid GDN memory model (48 linear-attention + 16 full-
 # attention layers):
-# - Every session holds ~150MB of GDN recurrent state per slot (~75MB per
-#   rank sharded under TP2) regardless of context length, so the mamba pool -
-#   not the attention KV - caps session slots. --mamba-ssm-dtype bfloat16
-#   halves that state (the HF config pins float32; SGLang honors the
-#   override). --max-mamba-cache-size 128: TP2 has ONE pool for the whole
-#   host (DP2 had one per replica), and 4 state slots per request make 128
-#   slots = exactly 32 concurrent requests, matching what the DP2 setup
-#   served. The per-rank footprint (128 x ~75MB ~= 9.6GB) equals what a DP2
-#   replica spent on 64 full slots, so the KV budget is unchanged.
+# - Every session holds ~150MB of GDN recurrent state per slot (~110MB per
+#   rank under TP2 - not all of the state shards across ranks) regardless of
+#   context length, so the mamba pool - not the attention KV - caps session
+#   slots. --mamba-ssm-dtype bfloat16 halves that state (the HF config pins
+#   float32; SGLang honors the override). --max-mamba-cache-size 128: TP2 has
+#   ONE pool for the whole host (DP2 had one per replica), and 4 state slots
+#   per request make 128 slots = exactly 32 concurrent requests, matching
+#   what the DP2 setup served. The per-rank cost is 14.2GB (vs the 9.6GB a
+#   DP2 replica spent on 64 full slots); the extra ~4.5GB per card comes out
+#   of the KV pool.
 # - Full-attention KV stays bfloat16 (the production-verified recipe for this
 #   checkpoint keeps it out of fp8 for quality; ~61KiB/token full, ~30KiB per
 #   rank sharded). At 0.93 mem-fraction-static with the 128-slot mamba cap
-#   the sharded KV pool holds roughly 1.8M tokens of shared cache per host -
-#   the weights and the 3.85GB DFlash2 head (lighter than the 5.19GB MTP head
-#   it replaces) also shard across the two ranks, freeing far more than one
-#   replica had - i.e. ~7 full 256K sessions resident per host, all visible
-#   to every request on it; most agent sessions live far below the window, so
-#   real concurrency is higher.
+#   the sharded KV pool holds ~1.4M tokens of shared cache per host (measured
+#   1,400,192 per rank, which includes the DFLASH draft's own 13.4GB-per-rank
+#   KV) - the weights and the 3.85GB DFlash2 head (lighter than the 5.19GB
+#   MTP head it replaces) also shard across the two ranks - i.e. ~5 full
+#   256K sessions resident per host, all visible to every request on it;
+#   most agent sessions live far below the window, so real concurrency is
+#   higher.
 # - --enable-hierarchical-cache --hicache-size 16: the host-DRAM tier of the
 #   radix cache (SGLang HiCache). --hicache-size is PER TP RANK: each rank
 #   allocates its own host pool holding its shard of every token (pool_host
-#   sizes capacity as host_size / per-rank size_per_token), so TP2 at 16 uses
-#   ~32GB of host RAM total - the same physical footprint as the DP2 setup's
-#   two 16GB replica pools - while the shared cache holds ~2x the tokens
-#   because each token's bytes are split across the ranks. Do NOT double it
-#   to 32 for TP2: that is 64GB physical and OOMs the host pool at init on a
-#   64GB box. On hybrid GDN models the tier mirrors BOTH the KV pages and the
-#   GDN state (split from the same per-rank budget; ~2GB of the 16GB per rank
-#   goes to the mamba mirror). Evicted sessions reload their 256K prefix over
-#   PCIe (~0.3s) instead of re-prefilling it (tens of seconds). Raise toward
-#   24 (48GB total) only if more host RAM is free.
+#   sizes capacity as host_size / per-rank size_per_token), so TP2 at 16
+#   spends ~32GB of host RAM on KV + GDN state - the same physical footprint
+#   as the DP2 setup's two 16GB replica pools - and the shared cache holds
+#   ~2x the tokens because each token's bytes are split across the ranks.
+#   The DFLASH draft's KV ALSO gets a host mirror sized to the KV host pool's
+#   token count, adding ~3.7GB per rank ON TOP of the budget: measured host
+#   demand at 16 is ~19.8GB per rank (~40GB total). The ~28GB of checkpoint
+#   page cache left by the mmap weight load would push that past a 64GB host,
+#   so --weight-loader-drop-cache-after-load is set: it fadvise(DONTNEED)s
+#   each shard as it loads, freeing the cache before the pinned host pools
+#   allocate (the first TP2 boot OOMed exactly on the draft sidecar without
+#   it). Do NOT double it to 32 for TP2: that is 64GB physical and OOMs the
+#   host pool at init on a 64GB box; the realistic ceiling with drop-cache
+#   is ~20 (~50GB total). Evicted sessions reload their 256K prefix over
+#   PCIe (~0.3s) instead of re-prefilling it (tens of seconds).
 #
 # Agent-specific tuning:
 # - --mamba-radix-cache-strategy extra_buffer + --page-size 64: caches GDN
@@ -135,6 +142,7 @@ docker run -d --restart unless-stopped --gpus all \
   --enable-hierarchical-cache \
   --hicache-size 16 \
   --hicache-write-policy write_through \
+  --weight-loader-drop-cache-after-load \
   --enable-cache-report \
   --chunked-prefill-size 2048 \
   --max-running-requests 32 \
