@@ -21,7 +21,7 @@ Everything lives under `debian/`:
   - `sh/vllm-docker-stop-and-remove.sh` — `docker stop vllm && docker container rm vllm`.
   - `sh/vllm-docker-restart-service-install.sh` — installs the daily restart timer (see below).
   - `vllm-docker-restart.service` / `vllm-docker-restart.timer` — oneshot `docker restart vllm`, daily.
-  - `thinking/`, `turbo/`, `listen/` — one `*-vllm-docker-setup.sh` per model deployment.
+  - `thinking/`, `turbo/`, `listen/` — one setup script per model deployment: `*-vllm-docker-setup.sh` (vLLM) or `*-sglang-docker-setup.sh` (SGLang, `thinking/`; `stratus.thinking` on 2 x RTX 6000 Pro Blackwell via `lmsysorg/sglang:latest`, Qwen3.8-27B-FP8, `--dp-size 2`, 256K context, thinking on, NEXTN spec from the built-in MTP head, bf16 mamba state, extra_buffer radix cache, 32 GB HiCache host tier).
   - `listen/Dockerfile` + `config.yml` — the only locally built image (`stratus/listen`): `vllm/vllm-openai` base plus `vllm[audio]` for Qwen3-ASR.
 - `nvidia/power-service/` — installs `nvidia-power.service` (oneshot, after `nvidia-persistenced`, `RemainAfterExit=yes`) which runs `nvidia-smi -pm 1` and caps power at 350 W (`nvidia-smi -pl 350`).
 - `hugging_face/remove-all-hub-data.sh` — wipes `~/.cache/huggingface/hub`.
