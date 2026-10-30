@@ -46,32 +46,38 @@
 #   of the KV pool.
 # - Full-attention KV stays bfloat16 (the production-verified recipe for this
 #   checkpoint keeps it out of fp8 for quality; ~61KiB/token full, ~30KiB per
-#   rank sharded). At 0.93 mem-fraction-static with the 128-slot mamba cap
-#   the sharded KV pool holds ~1.4M tokens of shared cache per host (measured
-#   1,400,192 per rank, which includes the DFLASH draft's own 13.4GB-per-rank
-#   KV) - the weights and the 3.85GB DFlash2 head (lighter than the 5.19GB
-#   MTP head it replaces) also shard across the two ranks - i.e. ~5 full
-#   256K sessions resident per host, all visible to every request on it;
-#   most agent sessions live far below the window, so real concurrency is
-#   higher.
-# - --enable-hierarchical-cache --hicache-size 16: the host-DRAM tier of the
+#   rank sharded). At 0.90 mem-fraction-static with the 128-slot mamba cap
+#   the sharded KV pool holds ~1.3M tokens of shared cache per host (1,400,192
+#   per rank measured at 0.93; the count includes the DFLASH draft's own
+#   13.4GB-per-rank KV) - the weights and the 3.85GB DFlash2 head (lighter
+#   than the 5.19GB MTP head it replaces) also shard across the two ranks -
+#   i.e. ~5 full 256K sessions resident per host, all visible to every
+#   request on it; most agent sessions live far below the window, so real
+#   concurrency is higher.
+# - --enable-hierarchical-cache --hicache-size 12: the host-DRAM tier of the
 #   radix cache (SGLang HiCache). --hicache-size is PER TP RANK: each rank
 #   allocates its own host pool holding its shard of every token (pool_host
-#   sizes capacity as host_size / per-rank size_per_token), so TP2 at 16
-#   spends ~32GB of host RAM on KV + GDN state - the same physical footprint
-#   as the DP2 setup's two 16GB replica pools - and the shared cache holds
-#   ~2x the tokens because each token's bytes are split across the ranks.
+#   sizes capacity as host_size / per-rank size_per_token), so TP2 at 12
+#   spends ~24GB of host RAM on KV + GDN state, and per GB of DRAM the shared
+#   cache holds ~2x the tokens a DP2 replica pool would because each token's
+#   bytes are split across the ranks. --hicache-write-policy write_through:
+#   every page written to GPU KV is mirrored to the host tier immediately
+#   (not on eviction), so the DRAM copy is always complete when a session is
+#   evicted from GPU KV; the cost is one extra PCIe write per new token
+#   (~7.5GB per rank to ingest a 256K prefix), accepted for a fleet where
+#   nearly every token gets re-read.
 #   The DFLASH draft's KV ALSO gets a host mirror sized to the KV host pool's
-#   token count, adding ~3.7GB per rank ON TOP of the budget: measured host
-#   demand at 16 is ~19.8GB per rank (~40GB total). The ~28GB of checkpoint
-#   page cache left by the mmap weight load would push that past a 64GB host,
-#   so --weight-loader-drop-cache-after-load is set: it fadvise(DONTNEED)s
-#   each shard as it loads, freeing the cache before the pinned host pools
-#   allocate (the first TP2 boot OOMed exactly on the draft sidecar without
-#   it). Do NOT double it to 32 for TP2: that is 64GB physical and OOMs the
-#   host pool at init on a 64GB box; the realistic ceiling with drop-cache
-#   is ~20 (~50GB total). Evicted sessions reload their 256K prefix over
-#   PCIe (~0.3s) instead of re-prefilling it (tens of seconds).
+#   token count, adding ~2.8GB per rank ON TOP of the budget: host demand at
+#   12 is ~15GB per rank (~30GB total; ~19.8GB per rank / ~40GB measured at
+#   16, which together with the ~28GB of checkpoint page cache left by the
+#   mmap weight load OOMed the 64GB host on the first TP2 boot, exactly on
+#   the draft sidecar). --weight-loader-drop-cache-after-load is set
+#   regardless: it fadvise(DONTNEED)s each shard as it loads, freeing the
+#   page cache before the pinned host pools allocate. Do NOT double it to 32
+#   for TP2: that is 64GB physical and OOMs the host pool at init on a 64GB
+#   box; the realistic ceiling with drop-cache is ~20 (~50GB total). Evicted
+#   sessions reload their 256K prefix over PCIe (~0.3s) instead of
+#   re-prefilling it (tens of seconds).
 #
 # Agent-specific tuning:
 # - --mamba-radix-cache-strategy extra_buffer + --page-size 64: caches GDN

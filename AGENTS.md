@@ -62,7 +62,7 @@ Two parallel paths, both single-instance per host (container and service are alw
 
 - `debian/vllm/fixes/minimax/apply-minimax-fix.sh` copies the parser into `~/vllm-venv/lib/python3.13/site-packages/...`, but the **stable** install creates the venv with `--python 3.12`. The fix only matches a python3.13 (nightly/default) venv; verify the actual venv python before applying.
 - `fixes/gemma/tool_chat_template_gemma4.jinja` is referenced by configs as `chat-template: /root/tool_chat_template_gemma4.jinja` — it must be copied to `/root/` by hand first ("Need to download Gemma 4 Template" comments mark which configs require it).
-- `docker/sh/vllm-docker-restart-service-install.sh` does `cp vllm-docker-restart.service ...` with a path relative to CWD, but the unit files live in `docker/`, one level above the script and in `docker/thinking/` etc. Where it works from depends on the CWD at runtime — expect `cp` failures and a broken timer if run from a model subdirectory.
+- `docker/sh/vllm-docker-restart-service-install.sh` copies the units with `cp ../vllm-docker-restart.*`, a CWD-relative path that only resolves to `docker/` when run from a model subdirectory (`docker/thinking/` etc., the convention for the entry scripts). Run it from `docker/` itself and `cp` fails with a broken timer.
 - `vllm/usage.md` is stale (`install-vllm.sh` does not exist).
 - `vllm/configs/listen/qwen3-asr-2b-config.yml` names a "2b" model but points at `Qwen/Qwen3-ASR-1.7B`; `docker/listen/config.yml` does the same.
 - The HF token is stored in plaintext in `/etc/environment` — treat that file as secret material; never log or echo its contents.
