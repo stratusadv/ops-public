@@ -13,12 +13,16 @@ TENSOR_PARALLEL="${TENSOR_PARALLEL:-1}"
 HF_TOKEN="${HF_TOKEN:-}"
 VLLM_API_KEY="${VLLM_API_KEY:-}"
 
-source ../sh/vllm-docker-stop-and-remove.sh || true
+echo "Stopping VLLM Docker and Removing Container"
+
+docker stop vllm-listen
+
+docker container rm vllm-listen
 
 docker build --build-arg "VLLM_TAG=${VLLM_TAG}" -t stratus/listen:"${VLLM_TAG}" .
 
 docker run -d --restart unless-stopped --gpus all \
-  --name vllm \
+  --name vllm-listen \
   --label autoheal=true \
   --ipc=host -p 8000:8000 \
   --health-cmd='curl -f http://localhost:8000/health || exit 1' \

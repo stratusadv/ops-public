@@ -12,12 +12,12 @@ EMBED_GPU="${EMBED_GPU:?set it in /etc/environment}"
 EMBED_GPU_MEMORY_UTILIZATION="${EMBED_GPU_MEMORY_UTILIZATION:?set it in /etc/environment}"
 VLLM_TAG="${VLLM_TAG:-latest}"
 
-source ../sh/embed-docker-stop-and-remove.sh || true
+docker stop vllm-embed
 
-docker pull vllm/vllm-openai:"${VLLM_TAG}"
+docker container rm vllm-embed
 
 docker run -d --restart unless-stopped --gpus "device=${EMBED_GPU}" \
-  --name embed \
+  --name vllm-embed \
   --label autoheal=true \
   --ipc=host -p 8002:8000 \
   --health-cmd='curl -f http://localhost:8000/health || exit 1' \
