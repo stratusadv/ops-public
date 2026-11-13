@@ -15,9 +15,9 @@ VLLM_API_KEY="${VLLM_API_KEY:-}"
 
 echo "Stopping VLLM Docker and Removing Container"
 
-docker stop vllm-listen
+docker stop vllm-listen || true
 
-docker container rm vllm-listen
+docker container rm vllm-listen || true
 
 docker build --build-arg "VLLM_TAG=${VLLM_TAG}" -t stratus/listen:"${VLLM_TAG}" .
 

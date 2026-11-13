@@ -12,9 +12,9 @@ EMBED_GPU="${EMBED_GPU:?set it in /etc/environment}"
 EMBED_GPU_MEMORY_UTILIZATION="${EMBED_GPU_MEMORY_UTILIZATION:?set it in /etc/environment}"
 VLLM_TAG="${VLLM_TAG:-latest}"
 
-docker stop vllm-embed
+docker stop vllm-embed || true
 
-docker container rm vllm-embed
+docker container rm vllm-embed || true
 
 docker run -d --restart unless-stopped --gpus "device=${EMBED_GPU}" \
   --name vllm-embed \
