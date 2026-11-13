@@ -36,4 +36,5 @@ docker run -d --restart unless-stopped --gpus all \
   -v "$(pwd)/config.yml:/config.yml:ro" \
   stratus/listen:"${VLLM_TAG}" \
   --config /config.yml \
+  --gpu-memory-utilization 0.55 \
   --tensor-parallel-size "${TENSOR_PARALLEL}"
