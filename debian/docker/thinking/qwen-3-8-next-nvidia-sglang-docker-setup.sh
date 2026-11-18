@@ -37,6 +37,7 @@ docker run -d --restart unless-stopped --gpus all \
   --host 0.0.0.0 \
   --port 8000 \
   --tp-size 2 \
+  --disable-custom-all-reduce \
   --mem-fraction-static 0.88 \
   --attention-backend flashinfer \
   --context-length 262144 \
