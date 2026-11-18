@@ -28,10 +28,10 @@ docker run -d --restart unless-stopped --gpus all \
   -e HF_TOKEN="${HF_TOKEN}" \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   -v /opt/models/ple_cache:/opt/models/ple_cache \
-  -v "$PWD/../fixes/qwen-next-tensors-layout.py:/opt/sglang/lib/python3.12/site-packages/sitecustomize.py:ro" \
   lmsysorg/sglang:dev \
   python -m sglang.launch_server \
-  --model-path nvidia/Qwen3.8-Flash-Next-FP4-Local \
+  --model-path RadixArk/Qwen3.8-Flash-Next-NVFP4 \
+  --quantization modelopt_fp4 \
   --served-model-name 'stratus.thinking' \
   --trust-remote-code \
   --host 0.0.0.0 \
