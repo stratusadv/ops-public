@@ -58,6 +58,7 @@ docker run -d --restart unless-stopped --gpus all \
   --default-chat-template-kwargs '{"enable_thinking": true}' \
   --speculative-algorithm NEXTN \
   --speculative-num-steps 3 \
+  --speculative-eagle-topk 1 \
   --disable-overlap-schedule
 
 source ../sh/vllm-docker-restart-service-install.sh
