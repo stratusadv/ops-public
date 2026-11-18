@@ -58,7 +58,7 @@ docker run -d --restart unless-stopped --gpus all \
   --speculative-algorithm NEXTN \
   --speculative-num-steps 3 \
   --speculative-eagle-topk 1 \
-  --ple-offload-backend file \
+  --ple-offload-backend pinned \
   --ple-offload-dir /opt/models/ple_cache \
   --disable-overlap-schedule
 
