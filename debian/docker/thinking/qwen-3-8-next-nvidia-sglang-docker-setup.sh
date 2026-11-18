@@ -12,7 +12,7 @@ source ../sh/vllm-docker-stop-and-remove.sh
 # Ensure the NVMe offload directory for the N-gram / PLE table exists
 mkdir -p /opt/models/ple_cache
 
-docker pull lmsysorg/sglang:latest
+docker pull lmsysorg/sglang:dev
 
 docker run -d --restart unless-stopped --gpus all \
   --name vllm \
@@ -28,7 +28,7 @@ docker run -d --restart unless-stopped --gpus all \
   -e HF_TOKEN="${HF_TOKEN}" \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   -v /opt/models/ple_cache:/opt/models/ple_cache \
-  lmsysorg/sglang:latest \
+  lmsysorg/sglang:dev \
   python -m sglang.launch_server \
   --model-path nvidia/Qwen3.8-Flash-Next-FP4-Local \
   --served-model-name 'stratus.thinking' \
