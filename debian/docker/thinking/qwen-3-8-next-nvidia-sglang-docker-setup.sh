@@ -26,7 +26,6 @@ docker run -d --restart unless-stopped --gpus all \
   -e SGLANG_JIT_DEEPGEMM_FAST_WARMUP=1 \
   -e PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" \
   -e HF_TOKEN="${HF_TOKEN}" \
-  -e VLLM_PLE_DISK_OFFLOAD_DIR="/opt/models/ple_cache" \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   -v /opt/models/ple_cache:/opt/models/ple_cache \
   lmsysorg/sglang:latest \
@@ -53,12 +52,14 @@ docker run -d --restart unless-stopped --gpus all \
   --chunked-prefill-size 2048 \
   --schedule-conservativeness 0.3 \
   --max-running-requests 64 \
-  --tool-call-parser qwen3_coder \
+  --tool-call-parser qwen3_xml \
   --reasoning-parser qwen3 \
   --default-chat-template-kwargs '{"enable_thinking": true}' \
   --speculative-algorithm NEXTN \
   --speculative-num-steps 3 \
   --speculative-eagle-topk 1 \
-  --disable-overlap-schedule
+  --ple-offload-backend disk \
+  --ple-offload-dir /opt/models/ple_cache \
+  --disable-overlap-schedule=false
 
 source ../sh/vllm-docker-restart-service-install.sh
