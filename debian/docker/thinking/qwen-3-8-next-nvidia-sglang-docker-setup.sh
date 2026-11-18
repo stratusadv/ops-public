@@ -60,6 +60,6 @@ docker run -d --restart unless-stopped --gpus all \
   --speculative-eagle-topk 1 \
   --ple-offload-backend file \
   --ple-offload-dir /opt/models/ple_cache \
-  --disable-overlap-schedule=false
+  --disable-overlap-schedule
 
 source ../sh/vllm-docker-restart-service-install.sh
