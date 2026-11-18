@@ -53,7 +53,7 @@ docker run -d --restart unless-stopped --gpus all \
   --chunked-prefill-size 2048 \
   --schedule-conservativeness 0.3 \
   --max-running-requests 64 \
-  --tool-call-parser qwen3_xml \
+  --tool-call-parser qwen3_coder \
   --reasoning-parser qwen3 \
   --default-chat-template-kwargs '{"enable_thinking": true}' \
   --speculative-algorithm NEXTN \
