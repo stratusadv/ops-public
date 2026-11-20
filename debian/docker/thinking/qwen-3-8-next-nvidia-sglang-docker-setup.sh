@@ -38,30 +38,25 @@ docker run -d --restart unless-stopped --gpus all \
   --port 8000 \
   --tp-size 2 \
   --disable-custom-all-reduce \
-  --mem-fraction-static 0.88 \
+  --mem-fraction-static 0.82 \
   --attention-backend flashinfer \
+  --linear-attn-prefill-backend flashinfer \
+  --linear-attn-decode-backend flashinfer \
   --context-length 262144 \
   --kv-cache-dtype bfloat16 \
   --mamba-ssm-dtype bfloat16 \
   --mamba-radix-cache-strategy extra_buffer \
-  --max-mamba-cache-size 256 \
+  --max-mamba-cache-size 128 \
   --page-size 64 \
-  --enable-hierarchical-cache \
-  --hicache-size 10 \
-  --hicache-write-policy write_back \
   --weight-loader-drop-cache-after-load \
   --enable-cache-report \
   --chunked-prefill-size 2048 \
-  --schedule-conservativeness 0.3 \
-  --max-running-requests 64 \
+  --schedule-conservativeness 0.5 \
+  --max-running-requests 32 \
   --tool-call-parser qwen3_coder \
   --reasoning-parser qwen3 \
   --default-chat-template-kwargs '{"enable_thinking": true}' \
-  --speculative-algorithm NEXTN \
-  --speculative-num-steps 3 \
-  --speculative-eagle-topk 1 \
   --ple-offload-backend file \
-  --ple-offload-dir /opt/models/ple_cache \
-  --disable-overlap-schedule
+  --ple-offload-dir /opt/models/ple_cache
 
 source ../sh/vllm-docker-restart-service-install.sh
